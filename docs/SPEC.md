@@ -154,3 +154,23 @@ The project was built in four phases. Each phase's criteria were written before 
 - If the microphone is missing or denied, the page says so and upload and samples still work.
 - A recorded example is labelled as such right next to the result.
 - There is deliberately no "approve all" button.
+
+### Phase 4: CI and documentation
+
+- Every requirement ID in this document appears in the name of at least one test.
+- CI runs on Node 22: clean install, typecheck, lint, tests with the requirement coverage gate, build
+  and a check that no provider credentials reach the browser bundle. It needs no secrets.
+- A separate, optional CI job runs the Playwright smoke test in Chromium.
+- The README covers the problem, the pipeline diagram, running with and without a key, deploying,
+  design decisions, limitations and the license, and links this document.
+- `.env` files and the planning workspace are ignored and not tracked; `.env.example` holds names only.
+- The lockfile is regenerated from a clean install so `npm ci` works on Linux runners.
+
+## How to check it yourself
+
+```bash
+npm ci
+npm run test:req       # runs Vitest and prints which tests prove which requirement
+npm run test:e2e       # builds and runs the Playwright smoke test (needs Chromium: npx playwright install chromium)
+npm test -- -t "EXT-04"  # only the tests for one requirement
+```
