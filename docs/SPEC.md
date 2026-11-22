@@ -115,3 +115,23 @@ The project was built in four phases. Each phase's criteria were written before 
 - Unparseable output twice: every field is listed as failing, no exception.
 - The German prompt asks for formal Sie-form German, the English prompt for English; both require
   verbatim source snippets and include the reference date.
+
+### Phase 2: API routes and provider
+
+- Live transcription and extraction work against a mocked Groq API and send the documented
+  parameters (Whisper `verbose_json`; strict JSON schema; low reasoning effort).
+- An upload over 4 MB gets 413, whether the size is known from the header or the file, and Groq is
+  not called.
+- Audio over 30 seconds gets 400: before transcription if the browser reports it, after
+  transcription if Groq reports it.
+- The 11th live request from one IP within 10 minutes gets 429 with `Retry-After`; another IP is
+  unaffected; the window resets. Sample requests never count.
+- When Groq answers 429 or 503, both routes return a recorded example with a notice instead of an
+  error.
+- A test API key never appears in any response, even when Groq rejects it.
+- Every kind of malformed request gets a 400 with a code and a readable message.
+- `/api/status` reports live or demo mode per request.
+- With no key, the real route handlers return recorded results with a "no key" notice.
+- Three samples exist (Turkish, Arabic, Hindi) with German and English recorded outputs; the
+  Turkish one replays an invalid first answer and a repair.
+- All six recorded runs pass the real pipeline with no failing fields and no source warnings.
