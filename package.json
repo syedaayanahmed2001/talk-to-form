@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:req": "vitest run --reporter=default --reporter=json --outputFile.json=reports/vitest.json && node scripts/req-coverage.mjs reports/vitest.json"
+    "test:req": "vitest run --reporter=default --reporter=json --outputFile.json=reports/vitest.json && node scripts/req-coverage.mjs reports/vitest.json",
+    "check:bundle": "node scripts/check-bundle.mjs"
   },
   "engines": {
     "node": ">=22"
