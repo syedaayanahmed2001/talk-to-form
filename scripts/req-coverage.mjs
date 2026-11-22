@@ -8,11 +8,13 @@
  *
  *   npx vitest run --reporter=json --outputFile=reports/vitest.json
  *   node scripts/req-coverage.mjs reports/vitest.json [reports/playwright.json] [--only=INC,EXT]
+ *     [--except=UI-08,QA-03]   (skip IDs that only another report can prove)
  */
 import { readFileSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const only = args.find((a) => a.startsWith("--only="))?.slice("--only=".length).split(",");
+const except = args.find((a) => a.startsWith("--except="))?.slice("--except=".length).split(",") ?? [];
 const reports = args.filter((a) => !a.startsWith("--"));
 if (reports.length === 0) {
   console.error("usage: req-coverage.mjs <report.json>... [--only=PREFIX,...|ID,...]");
@@ -22,9 +24,8 @@ if (reports.length === 0) {
 const ID = /\b([A-Z]{2,4}-\d{2})\b/g;
 const spec = readFileSync(new URL("../docs/SPEC.md", import.meta.url), "utf8");
 const requirements = [...new Set([...spec.matchAll(/^\| ([A-Z]{2,4}-\d{2}) \|/gm)].map((m) => m[1]))];
-const inScope = requirements.filter(
-  (id) => !only || only.some((o) => id === o || id.startsWith(`${o}-`)),
-);
+const matches = (id, list) => list.some((o) => id === o || id.startsWith(`${o}-`));
+const inScope = requirements.filter((id) => (!only || matches(id, only)) && !matches(id, except));
 
 /** @type {{ title: string, passed: boolean, file: string }[]} */
 const tests = [];
@@ -32,7 +33,7 @@ const tests = [];
 function collectPlaywright(suite, file) {
   for (const spec of suite.specs ?? []) {
     const passed = spec.tests.every((t) => t.results.every((r) => r.status === "passed" || r.status === "skipped") && t.results.length > 0);
-    tests.push({ title: spec.title, passed: spec.ok && passed, file: spec.file ?? file });
+    tests.push({ title: spec.title, passed: spec.ok && passed, file: `e2e/${spec.file ?? file}` });
   }
   for (const child of suite.suites ?? []) collectPlaywright(child, suite.file ?? file);
 }
