@@ -2,6 +2,9 @@
   "name": "talk-to-form",
   "version": "0.1.0",
   "private": true,
+  "description": "Speak an incident report in any language; get a formal German or English record, approved field by field by a person.",
+  "license": "MIT",
+  "author": "Syed Aayan Ahmed",
   "scripts": {
     "dev": "next dev --port 3100",
     "build": "next build",
@@ -10,9 +13,10 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:req": "vitest run --reporter=default --reporter=json --outputFile.json=reports/vitest.json && node scripts/req-coverage.mjs reports/vitest.json",
+    "test:req": "vitest run --reporter=default --reporter=json --outputFile.json=reports/vitest.json && node scripts/req-coverage.mjs reports/vitest.json --except=UI-08,QA-03",
     "check:bundle": "node scripts/check-bundle.mjs",
-    "test:e2e": "next build && playwright test"
+    "test:e2e": "next build && playwright test",
+    "req:all": "node scripts/req-coverage.mjs reports/vitest.json reports/playwright.json"
   },
   "engines": {
     "node": ">=22"
