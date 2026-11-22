@@ -135,3 +135,22 @@ The project was built in four phases. Each phase's criteria were written before 
 - Three samples exist (Turkish, Arabic, Hindi) with German and English recorded outputs; the
   Turkish one replays an invalid first answer and a repair.
 - All six recorded runs pass the real pipeline with no failing fields and no source warnings.
+
+### Phase 3: review UI
+
+- Recording stops by itself at 30 seconds and sends its duration; an upload is posted as a file; a
+  picked sample is sent by id.
+- The transcript is shown next to the form, and focusing a field highlights its source in the
+  transcript.
+- Each field shows its value, its source snippet, its confidence as a word, and Approve and Edit.
+- An invalid edit is rejected with the schema's message; a valid edit is marked "Edited" and approved.
+- A field that failed validation can't be approved until a valid value is saved.
+- The JSON and the printable view appear only after all nine fields are approved; reopening a field
+  hides them again.
+- Switching between Deutsch and English re-runs extraction and resets approvals.
+- Every control has an accessible name, progress is announced to screen readers, and the whole
+  sample flow can be completed with the keyboard alone.
+- No horizontal scrolling at 360 px.
+- If the microphone is missing or denied, the page says so and upload and samples still work.
+- A recorded example is labelled as such right next to the result.
+- There is deliberately no "approve all" button.
