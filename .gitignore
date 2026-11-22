@@ -49,3 +49,5 @@ next-env.d.ts
 # spec-driven planning workspace (GSD); the public spec lives in docs/SPEC.md
 .planning/
 /reports/
+
+.vercel
